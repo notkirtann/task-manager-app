@@ -78,4 +78,26 @@ const loginUser = async (req, res) => {
   }
 }
 
-export { createUser, getMyUsers, getUserById, updateUserById, deleteUser, loginUser };
+const logoutUser = async (req,res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter((token)=>{
+      return token.token !== req.token 
+    })
+    await req.user.save()
+    res.send('Succesfully Logout')
+  } catch (e) {
+    res.status(500).send()
+  } 
+}
+
+const logoutAll = async (req,params) => {
+  try {
+    req.user.tokens = []
+    await req.user.save()
+    res.send('Succesfully Logout from all session')
+  } catch (e) {
+    res.status(500).send('Unable to logout from All session')
+  }
+}
+
+export { createUser, getMyUsers, getUserById, updateUserById, deleteUser, loginUser, logoutUser, logoutAll };
