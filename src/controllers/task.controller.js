@@ -17,7 +17,7 @@ const createTask = async (req, res) => {
 
 const getAllTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({}).populate('userId', 'name email');
+    const tasks = await Task.find({ownerId: req.user._id});
     res.send(tasks);
   } catch (error) {
     res.status(500).send({ error: "Error fetching tasks" });
@@ -48,7 +48,10 @@ const updateTaskById = async (req, res) => {
   }
 
   try {
-    const task = await Task.findById(req.params.id);
+    const task = await Task.findOne({ 
+      _id: req.params.id, 
+      ownerId: req.user._id 
+    });
     
     if (!task) {
       return res.status(404).send({ error: "Task not found" });
@@ -65,7 +68,10 @@ const updateTaskById = async (req, res) => {
 
 const deleteTask = async (req, res) => {
   try {
-    const task = await Task.findByIdAndDelete(req.params.id);
+    const task = await Task.findOneAndDelete({ 
+      _id: req.params.id, 
+      ownerId: req.user._id 
+    });
 
     if (!task) {
       return res.status(404).send({ error: "Task not found" });
