@@ -1,4 +1,5 @@
 import User from "../models/user.js";
+import Task from "../models/task.js";
 
 const createUser = async (req, res) => {
   try {
@@ -150,6 +151,7 @@ const removeAddressField = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     await req.user.deleteOne()
+    await Task.deleteMany({ownerId : req.user._id})
     res.send(req.user);
   } catch (error) {
     res.status(500).send({ error: "Internal server error" });
