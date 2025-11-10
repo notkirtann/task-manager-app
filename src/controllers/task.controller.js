@@ -25,9 +25,9 @@ const getAllTasks = async (req, res) => {
 };
 
 const getTaskById = async (req,res) => {
-  const _id = req.params._id
+  const _id = req.params.id
   try {
-    const task = await Task.findOne({_id, ownerId : req.params._id})
+    const task = await Task.findOne({ _id, ownerId : req.user._id})
 
     if(!task){
       return res.status(404).send()
