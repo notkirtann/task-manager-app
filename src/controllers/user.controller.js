@@ -57,12 +57,10 @@ const updateUser = async (req, res) => {
   }
 
   try {
-    const user = await User.findById(req.user._id);
-
-    updates.forEach(update => user[update] = req.body[update]);
-    await user.save();
+    updates.forEach(update => req.user[update] = req.body[update]);
+    await req.user.save();
     
-    res.send(user);
+    res.send(req.user);
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
@@ -151,7 +149,7 @@ const removeAddressField = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    await req.users.remove()
+    await req.user.deleteOne()
     res.send(req.user);
   } catch (error) {
     res.status(500).send({ error: "Internal server error" });
