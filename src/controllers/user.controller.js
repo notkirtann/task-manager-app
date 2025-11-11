@@ -44,6 +44,10 @@ const logoutAll = async (req,res) => {
   }
 }
 
+const uploadAvatar = async (req,res) => {
+  res.send('avatar added successfully')
+}
+
 const getMyProfile = async (req, res) => {
   res.send(req.user)
 }
@@ -174,7 +178,17 @@ const deleteUser = async (req, res) => {
 };
 
 const userController ={
-  createUser, getMyProfile, updateUser, deleteUser, loginUser, logoutUser, logoutAll, updateAddressField, updatePhoneNumberField, removeAddressField
+  createUser, 
+  loginUser, 
+  logoutUser, 
+  logoutAll,
+  uploadAvatar,
+  getMyProfile, 
+  updateUser, 
+  updateAddressField, 
+  updatePhoneNumberField, 
+  removeAddressField,
+  deleteUser
 }
 
 export default userController;
