@@ -70,7 +70,13 @@ const updateUser = async (req, res) => {
 const updateAddressField = async (req, res) => {
   try {
     const { userId, addressId } = req.params;
+    
+    if (userId !== req.user._id.toString()) {
+      return res.status(403).send({ error: "Unauthorized" });
+    }
+
     const updates = req.body; 
+    
 
     const updateQuery = {};
     for (let key in updates) {
@@ -99,6 +105,10 @@ const updateAddressField = async (req, res) => {
 const updatePhoneNumberField = async (req, res) => {
   try {
     const { userId, phoneId } = req.params;
+    if (userId !== req.user._id.toString()) {
+      return res.status(403).send({ error: "Unauthorized" });
+    }
+
     const updates = req.body; 
 
     const updateQuery = {};
@@ -128,6 +138,11 @@ const updatePhoneNumberField = async (req, res) => {
 const removeAddressField = async (req, res) => {
   try {
     const { userId, addressId } = req.params;
+
+    if (userId !== req.user._id.toString()) {
+      return res.status(403).send({ error: "Unauthorized" });
+    }
+
 
     const user = await User.findByIdAndUpdate(
       userId,

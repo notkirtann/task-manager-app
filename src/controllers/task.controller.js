@@ -23,7 +23,7 @@ const getAllTasks = async (req, res) => {
   }
 
   try {
-    const tasks = await Task.find({ownerId: req.user._id,completed:match});
+    const tasks = await Task.find({ownerId: req.user._id,completed:match()});
     res.send(tasks);
   } catch (error) {
     res.status(500).send({ error: "Error fetching tasks" });
