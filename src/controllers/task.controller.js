@@ -16,14 +16,22 @@ const createTask = async (req, res) => {
 };
 
 const getAllTasks = async (req, res) => {
-  const match = {}
+  const match = { ownerId: req.user._id }
   
   if(req.query.completed){
-    match.completed = req.query.completed ==='true'
+    match.completed = req.query.completed === 'true'
+  }
+  const limit = parseInt(req.query.limit) || 5
+  const skip = parseInt(req.query.skip) || 0
+  const sort = {}
+
+  if(req.query.sortBy){
+    const parts = req.query.sortBy.split(':')
+    sort[parts[0]]= parts[1]==='desc' ? -1 : 1
   }
 
   try {
-      const tasks = await Task.populate({ownerId: req.user._id,match});
+      const tasks = await Task.find(match).limit(limit).skip(skip).sort(sort)
       res.send(tasks);
   } catch (error) {
     res.status(500).send({ error: "Error fetching tasks" });
