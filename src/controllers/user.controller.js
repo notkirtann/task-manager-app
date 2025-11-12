@@ -1,12 +1,17 @@
 import User from "../models/user.js";
 import Task from "../models/task.js";
 import sharp from 'sharp'
+import { sendMail } from "../emails/account.js";
 
 const createUser = async (req, res) => {
   try {
     const user = new User(req.body);
     const token = await user.genAuthToken()
     await user.save();
+    
+    //welcome mail
+    await sendMail(user.email)
+
     res.status(201).send({user, token});
   } catch (error) {
     res.status(400).send({ error: error.message });

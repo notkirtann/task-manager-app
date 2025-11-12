@@ -1,15 +1,16 @@
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import path from 'path';
+// import dotenv from 'dotenv';
+// import { fileURLToPath } from 'url';
+// import path from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
-dotenv.config({
-  path: path.resolve(__dirname, '../.env'),
-  processEnv: process.env,
-});
-
+// dotenv.config({
+//   path: path.resolve(__dirname, '../.env'),
+//   processEnv: process.env,
+// });
+import dotenv from 'dotenv'
+dotenv.config()
 console.log("<-------------------------------------------------->Loaded MONGODB_URL:", process.env.MONGODB_URL);
 
 import express from "express";
@@ -18,7 +19,7 @@ import userRoutes from "./routes/user.routes.js";
 import taskRoutes from "./routes/task.routes.js";
 
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use('/users', userRoutes);

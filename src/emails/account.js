@@ -1,9 +1,7 @@
 import dotenv from 'dotenv'
-dotenv.config
+dotenv.config()
 import nodemailer from 'nodemailer'
-import http from 'http'
 
-const server = http.createServer((req,res)=>{
     const auth = nodemailer.createTransport({
         service: 'gmail',
         secure: true,
@@ -13,20 +11,18 @@ const server = http.createServer((req,res)=>{
             pass: process.env.userPASS
         }
     })
-    const reciver = {
-        from: process.env.userEMAIL,
-        to: process.env.senderEMAIL,
-        subject: "Hello ✔",
-        text: "Hello world?"
-    }
-
-    auth.sendMail(reciver,(error,emailResponse)=>{
-        if(error) throw error;
-        console.log('sucess');
-        res.end()
-    })
-
-});
-
-server.listen(8000)
- 
+    export const sendMail =async (emailofUser)  => {
+        const mailThis = {
+            from: process.env.userEMAIL,
+            to: emailofUser,
+            subject: "Welcome to task-manager-app ",
+            html :`
+            <h2>Hello Sir,</h2>
+            <p>Welcome to <strong>Task Manager App</strong>!</p>
+            <p>Your account has been successfully created. Start managing your tasks today 🚀</p>
+            <br>
+            <p>Best Regards,<br>Task Manager Team</p>
+            `
+        };
+    await auth.sendMail(mailThis) 
+};
