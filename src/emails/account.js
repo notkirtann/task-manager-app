@@ -7,14 +7,15 @@ import nodemailer from 'nodemailer'
         secure: true,
         port: 465,
         auth: {
-            user: process.env.userEMAIL,
-            pass: process.env.userPASS
+            user: process.env.USER_EMAIL,
+            pass: process.env.USER_PASS
+
         }
     })
 
     export const welcomeMail =async (emailofUser)  => {
         const mailThis = {
-            from: process.env.userEMAIL,
+            from: process.env.USER_EMAIL,
             to: emailofUser,
             subject: "Welcome to task-manager-app ",
             html :`
@@ -41,5 +42,5 @@ import nodemailer from 'nodemailer'
             <p>Best Regards,<br>Task Manager Team</p>
             `
         };
-        await auth.deleteMail(mailThis) 
+        await auth.sendMail(mailThis) 
     };
