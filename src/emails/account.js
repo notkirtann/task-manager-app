@@ -11,7 +11,8 @@ import nodemailer from 'nodemailer'
             pass: process.env.userPASS
         }
     })
-    export const sendMail =async (emailofUser)  => {
+
+    export const welcomeMail =async (emailofUser)  => {
         const mailThis = {
             from: process.env.userEMAIL,
             to: emailofUser,
@@ -24,5 +25,21 @@ import nodemailer from 'nodemailer'
             <p>Best Regards,<br>Task Manager Team</p>
             `
         };
-    await auth.sendMail(mailThis) 
-};
+        await auth.sendMail(mailThis) 
+    };
+
+    export const deleteMail =async (emailofUser)  => {
+        const mailThis = {
+            from: process.env.userEMAIL,
+            to: emailofUser,
+            subject: "Sad to see you go from task-manager-app ",
+            html :`
+            <h2>Hello Sir,</h2>
+            <p>We are very sad to see you leave <strong>Task Manager App</strong>!</p>
+            <p>Your account has been successfully deleted.</p>
+            <br>
+            <p>Best Regards,<br>Task Manager Team</p>
+            `
+        };
+        await auth.deleteMail(mailThis) 
+    };
