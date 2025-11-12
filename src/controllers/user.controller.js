@@ -1,5 +1,6 @@
 import User from "../models/user.js";
 import Task from "../models/task.js";
+import sharp from 'sharp'
 
 const createUser = async (req, res) => {
   try {
@@ -45,7 +46,26 @@ const logoutAll = async (req,res) => {
 }
 
 const uploadAvatar = async (req,res) => {
+  const buffer = await sharp(req.file.buffer).resize({width:250,height:250}).png().toBuffer()
+  req.user.avatar=buffer;
+  await req.user.save()
   res.send('avatar added successfully')
+}
+
+const showAvatar = async (req,res)=>{
+  const userProfile = await req.user.avatar
+  if(!req.user.avatar) {
+    res.send('Can\'t find Profile Picture')
+  } else {
+    res.set('Content-Type','image/png')
+    res.send(userProfile)
+  }
+}
+
+const deleteAvatar = async (req,res) =>{
+  req.user.avatar = undefined
+  await req.user.save()
+  res.send('avatar deleted succesfully')
 }
 
 const getMyProfile = async (req, res) => {
@@ -183,6 +203,8 @@ const userController ={
   logoutUser, 
   logoutAll,
   uploadAvatar,
+  showAvatar,
+  deleteAvatar,
   getMyProfile, 
   updateUser, 
   updateAddressField, 

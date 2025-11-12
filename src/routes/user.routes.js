@@ -5,7 +5,6 @@ import auth from '../middleware/auth.js';
 import { error } from 'console';
 
 const upload = multer({
-    dest: 'avatars',
     limits :{
         fileSize : 3500000
     },
@@ -32,9 +31,9 @@ router.post("/logout",auth,userController.logoutUser)
 router.post("/logoutAll",auth,userController.logoutAll)
 
 //upload module
-router.post("/me/avatar",upload.single('avatar'),userController.uploadAvatar,(error,req,res,next){
-    res.status(400).send({'error' : error.message})
-})
+router.post("/me/avatar",auth,upload.single('avatar'),userController.uploadAvatar,(error,req,res,next)=>res.status(400).send({'error' : error.message}))
+router.get('/me/avatar',auth,userController.showAvatar)
+router.delete('/me/avatar',auth,userController.deleteAvatar)
 
 //GeT
 router.get("/me", auth, userController.getMyProfile);
