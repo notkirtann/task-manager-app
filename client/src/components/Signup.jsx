@@ -2,52 +2,89 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-export default function Signup() {
+const Signup = () => {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    age: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+
   const { signup } = useAuth();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: "",
-    age: "",
-    email: "",
-    password: "",
-  });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
-  const [error, setError] = useState("");
-
-  const submit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
     try {
       await signup(form.name, form.email, form.password, form.age);
       navigate("/tasks");
-    } catch (e) {
-      setError("Signup failed. Check data.");
+    } catch (err) {
+      setError(err.message);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-12 bg-white p-6 rounded shadow">
-      <h2 className="text-2xl mb-4 font-semibold text-center">Create Account</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 rounded-2xl shadow-lg w-80 space-y-5"
+      >
+        <h2 className="text-2xl font-semibold text-gray-800 text-center">
+          Create Account
+        </h2>
 
-      <form onSubmit={submit} className="space-y-4">
-        <input className="w-full px-3 py-2 border rounded" placeholder="Name"
-          value={form.name} onChange={(e)=>setForm({...form,name:e.target.value})} />
+        <input
+          name="name"
+          className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black"
+          placeholder="Full Name"
+          onChange={handleChange}
+          required
+        />
 
-        <input className="w-full px-3 py-2 border rounded" placeholder="Age" type="number"
-          value={form.age} onChange={(e)=>setForm({...form,age:e.target.value})} />
+        <input
+          type="email"
+          name="email"
+          className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black"
+          placeholder="Email"
+          onChange={handleChange}
+          required
+        />
 
-        <input className="w-full px-3 py-2 border rounded" placeholder="Email" type="email"
-          value={form.email} onChange={(e)=>setForm({...form,email:e.target.value})} />
+        <input
+          type="number"
+          name="age"
+          className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black"
+          placeholder="Age"
+          onChange={handleChange}
+          required
+        />
 
-        <input className="w-full px-3 py-2 border rounded" placeholder="Password" type="password"
-          value={form.password} onChange={(e)=>setForm({...form,password:e.target.value})} />
+        <input
+          type="password"
+          name="password"
+          className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black"
+          placeholder="Password"
+          onChange={handleChange}
+          required
+        />
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
-        <button className="w-full bg-blue-600 text-white py-2 rounded">
+        <button
+          type="submit"
+          className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
+        >
           Sign Up
         </button>
       </form>
     </div>
   );
-}
+};
+
+export default Signup;

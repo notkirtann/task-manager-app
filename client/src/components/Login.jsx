@@ -2,49 +2,64 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
-
-  const submit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     try {
-      await login(form.email, form.password);
+      await login(email, password);
       navigate("/tasks");
-    } catch {
-      setError("Invalid email or password");
+    } catch (err) {
+      setError(err.message);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-12 bg-white p-6 rounded shadow">
-      <h2 className="text-2xl mb-4 font-semibold text-center">Login</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 rounded-2xl shadow-lg w-80 space-y-5"
+      >
+        <h2 className="text-2xl font-semibold text-gray-800 text-center">
+          Login
+        </h2>
 
-      <form onSubmit={submit} className="space-y-4">
         <input
           type="email"
+          className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
           placeholder="Email"
-          className="w-full px-3 py-2 border rounded"
-          value={form.email}
-          onChange={(e) => setForm({...form, email: e.target.value})}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
         />
+
         <input
           type="password"
+          className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
           placeholder="Password"
-          className="w-full px-3 py-2 border rounded"
-          value={form.password}
-          onChange={(e) => setForm({...form, password: e.target.value})}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
         />
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
-        <button className="w-full bg-blue-600 text-white py-2 rounded">
+        <button
+          type="submit"
+          className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
+        >
           Login
         </button>
       </form>
     </div>
   );
-}
+};
+
+export default Login;
