@@ -1,104 +1,80 @@
-// client/src/components/Dashboard.jsx
-import React, { useState, useEffect } from 'react';
-import api from '../api';
+import { useState, useEffect } from "react";
+import api from "../api";
 
-const Dashboard = () => {
+export default function Dashboard() {
   const [tasks, setTasks] = useState([]);
-  const [newTaskDescription, setNewTaskDescription] = useState('');
+  const [desc, setDesc] = useState("");
 
-  const fetchTasks = async () => {
-    try {
-      // GET /tasks fetches all tasks for the authenticated user
-      const response = await api.get('/tasks');
-      setTasks(response.data);
-    } catch (e) {
-      console.error('Error fetching tasks:', e);
-    }
+  const load = async () => {
+    const res = await api.get("/tasks");
+    setTasks(res.data);
   };
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  useEffect(() => { load(); }, []);
 
-  const handleCreateTask = async (e) => {
+  const createTask = async (e) => {
     e.preventDefault();
-    if (!newTaskDescription.trim()) return;
-    try {
-      // POST /tasks creates a new task
-      await api.post('/tasks', { description: newTaskDescription });
-      setNewTaskDescription('');
-      fetchTasks(); // Refresh list
-    } catch (e) {
-      console.error('Error creating task:', e);
-    }
+    await api.post("/tasks", { description: desc });
+    setDesc("");
+    load();
   };
 
-  const handleToggleCompleted = async (task) => {
-    try {
-      // PATCH /tasks/:id updates a task
-      await api.patch(`/tasks/${task._id}`, { completed: !task.completed });
-      fetchTasks(); // Refresh list
-    } catch (e) {
-      console.error('Error updating task:', e);
-    }
+  const toggle = async (t) => {
+    await api.patch(`/tasks/${t._id}`, { completed: !t.completed });
+    load();
   };
 
-  const handleDeleteTask = async (id) => {
-    try {
-      // DELETE /tasks/:id deletes a task
-      await api.delete(`/tasks/${id}`);
-      fetchTasks(); // Refresh list
-    } catch (e) {
-      console.error('Error deleting task:', e);
-    }
+  const remove = async (id) => {
+    await api.delete(`/tasks/${id}`);
+    load();
   };
 
   return (
-    <div>
-      <h2>Your Tasks</h2>
-      <form onSubmit={handleCreateTask} style={{ marginBottom: '20px' }}>
+    <div className="max-w-xl mx-auto mt-10">
+      <h2 className="text-2xl font-bold mb-4">Your Tasks</h2>
+
+      <form onSubmit={createTask} className="flex gap-2 mb-6">
         <input
-          type="text"
-          placeholder="New task description"
-          value={newTaskDescription}
-          onChange={(e) => setNewTaskDescription(e.target.value)}
-          required
-          style={{ padding: '8px', marginRight: '10px', width: '300px' }}
+          className="flex-1 border px-3 py-2 rounded"
+          placeholder="New task..."
+          value={desc}
+          onChange={(e)=>setDesc(e.target.value)}
         />
-        <button type="submit">Add Task</button>
+        <button className="bg-blue-600 text-white px-4 py-2 rounded">
+          Add
+        </button>
       </form>
 
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        {tasks.map(task => (
-          <li key={task._id} style={{ 
-            padding: '10px', 
-            borderBottom: '1px solid #ccc',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-            <span 
-              style={{ 
-                textDecoration: task.completed ? 'line-through' : 'none',
-                flexGrow: 1
-              }}
+      <div className="bg-white rounded shadow divide-y">
+        {tasks.map((t) => (
+          <div key={t._id} className="flex items-center justify-between p-4">
+            <span
+              className={t.completed ? "line-through text-gray-500" : ""}
             >
-              {task.description}
+              {t.description}
             </span>
-            <div>
-              <button onClick={() => handleToggleCompleted(task)} style={{ marginRight: '10px' }}>
-                {task.completed ? 'Mark as Incomplete' : 'Mark as Complete'}
+
+            <div className="flex gap-2">
+              <button
+                onClick={() => toggle(t)}
+                className="px-3 py-1 bg-green-500 text-white rounded"
+              >
+                {t.completed ? "Undo" : "Done"}
               </button>
-              <button onClick={() => handleDeleteTask(task._id)} style={{ background: 'red', color: 'white' }}>
+              <button
+                onClick={() => remove(t._id)}
+                className="px-3 py-1 bg-red-500 text-white rounded"
+              >
                 Delete
               </button>
             </div>
-          </li>
+          </div>
         ))}
-      </ul>
-      {tasks.length === 0 && <p>You have no tasks! Start by adding one above.</p>}
+      </div>
+
+      {tasks.length === 0 && (
+        <p className="text-center text-gray-600 mt-4">No tasks yet.</p>
+      )}
     </div>
   );
-};
-
-export default Dashboard;
+}

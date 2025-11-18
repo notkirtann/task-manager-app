@@ -1,6 +1,6 @@
 // client/src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from './context/AuthContext';
 
 // Components (defined below)
 import Login from './components/Login';

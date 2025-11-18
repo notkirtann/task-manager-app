@@ -1,48 +1,53 @@
-// client/src/components/Signup.jsx
-import React, { useState } from 'react';
-import { useAuth } from '../AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [age, setAge] = useState(0);
-  const [error, setError] = useState('');
+export default function Signup() {
   const { signup } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const [form, setForm] = useState({
+    name: "",
+    age: "",
+    email: "",
+    password: "",
+  });
+
+  const [error, setError] = useState("");
+
+  const submit = async (e) => {
     e.preventDefault();
-    setError('');
     try {
-      await signup(name, email, password, age);
-      navigate('/tasks'); // Redirect to tasks after successful signup
-    } catch (err) {
-      // Your server sends back validation errors like 'You don\'t satisfy password criteria' or 'Write valid email'
-      setError(err.message);
+      await signup(form.name, form.email, form.password, form.age);
+      navigate("/tasks");
+    } catch (e) {
+      setError("Signup failed. Check data.");
     }
   };
 
   return (
-    <div>
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', maxWidth: '300px', gap: '10px' }}>
-        <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="number" placeholder="Age" value={age} onChange={(e) => setAge(e.target.value)} min="0" required />
-        <input 
-          type="password" 
-          placeholder="Password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          required 
-        />
-        <button type="submit">Sign Up</button>
+    <div className="max-w-md mx-auto mt-12 bg-white p-6 rounded shadow">
+      <h2 className="text-2xl mb-4 font-semibold text-center">Create Account</h2>
+
+      <form onSubmit={submit} className="space-y-4">
+        <input className="w-full px-3 py-2 border rounded" placeholder="Name"
+          value={form.name} onChange={(e)=>setForm({...form,name:e.target.value})} />
+
+        <input className="w-full px-3 py-2 border rounded" placeholder="Age" type="number"
+          value={form.age} onChange={(e)=>setForm({...form,age:e.target.value})} />
+
+        <input className="w-full px-3 py-2 border rounded" placeholder="Email" type="email"
+          value={form.email} onChange={(e)=>setForm({...form,email:e.target.value})} />
+
+        <input className="w-full px-3 py-2 border rounded" placeholder="Password" type="password"
+          value={form.password} onChange={(e)=>setForm({...form,password:e.target.value})} />
+
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <button className="w-full bg-blue-600 text-white py-2 rounded">
+          Sign Up
+        </button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
-};
-
-export default Signup;
+}

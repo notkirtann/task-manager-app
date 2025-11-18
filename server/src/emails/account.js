@@ -31,7 +31,7 @@ import nodemailer from 'nodemailer'
 
     export const deleteMail =async (emailofUser)  => {
         const mailThis = {
-            from: process.env.userEMAIL,
+            from: process.env.USER_EMAIL,
             to: emailofUser,
             subject: "Sad to see you go from task-manager-app ",
             html :`
