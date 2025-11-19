@@ -1,7 +1,16 @@
 @import "tailwindcss";
 
-/* Apple-like font + smoothing */
+@theme {
+  --color-bg: #0b0b0d;
+  --color-bg-card: rgba(255, 255, 255, 0.06);
+  --color-bg-glass: rgba(255, 255, 255, 0.07);
+  --color-border: rgba(255, 255, 255, 0.12);
+
+  --color-primary: #6366f1;   /* indigo */
+  --color-secondary: #06b6d4; /* cyan */
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
+  background: var(--color-bg);
+  color: white;
 }

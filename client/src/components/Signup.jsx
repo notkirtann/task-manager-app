@@ -2,90 +2,142 @@ import React from "react";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-const Signup = () => {
+export default function Signup() {
+  const { signup } = useAuth();
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     age: "",
     password: "",
   });
-  const [error, setError] = useState("");
 
-  const { signup } = useAuth();
-  const navigate = useNavigate();
+  const [err, setErr] = useState("");
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setErr("");
 
     try {
       await signup(form.name, form.email, form.password, form.age);
       navigate("/tasks");
-    } catch (err) {
-      setError(err.message);
+    } catch (error) {
+      setErr("Signup failed — check details");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl shadow-lg w-80 space-y-5"
+    <div className="min-h-screen flex items-center justify-center bg-[--color-bg]">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="
+          w-full max-w-sm
+          bg-[--color-bg-glass]
+          backdrop-blur-xl
+          border border-[--color-border]
+          p-8 rounded-2xl
+          shadow-xl
+          text-gray-200
+        "
       >
-        <h2 className="text-2xl font-semibold text-gray-800 text-center">
+        <h2 className="text-3xl font-semibold mb-8 text-center bg-gradient-to-r from-[--color-primary] to-[--color-secondary] bg-clip-text text-transparent">
           Create Account
         </h2>
 
-        <input
-          name="name"
-          className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black"
-          placeholder="Full Name"
-          onChange={handleChange}
-          required
-        />
+        <form onSubmit={handleSubmit} className="space-y-5">
 
-        <input
-          type="email"
-          name="email"
-          className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-        />
+          {/* Name */}
+          <div>
+            <label className="text-sm text-gray-400">Full Name</label>
+            <input
+              name="name"
+              className="
+                w-full px-4 py-2 mt-1 rounded-lg
+                bg-[#1a1a1d] text-gray-200 border border-[--color-border]
+                focus:outline-none focus:border-[--color-primary]
+              "
+              onChange={handleChange}
+            />
+          </div>
 
-        <input
-          type="number"
-          name="age"
-          className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black"
-          placeholder="Age"
-          onChange={handleChange}
-          required
-        />
+          {/* Email */}
+          <div>
+            <label className="text-sm text-gray-400">Email</label>
+            <input
+              name="email"
+              type="email"
+              className="
+                w-full px-4 py-2 mt-1 rounded-lg
+                bg-[#1a1a1d] text-gray-200 border border-[--color-border]
+                focus:outline-none focus:border-[--color-primary]
+              "
+              onChange={handleChange}
+            />
+          </div>
 
-        <input
-          type="password"
-          name="password"
-          className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-        />
+          {/* Age */}
+          <div>
+            <label className="text-sm text-gray-400">Age</label>
+            <input
+              name="age"
+              type="number"
+              className="
+                w-full px-4 py-2 mt-1 rounded-lg
+                bg-[#1a1a1d] text-gray-200 border border-[--color-border]
+                focus:outline-none focus:border-[--color-primary]
+              "
+              onChange={handleChange}
+            />
+          </div>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+          {/* Password */}
+          <div>
+            <label className="text-sm text-gray-400">Password</label>
+            <input
+              name="password"
+              type="password"
+              className="
+                w-full px-4 py-2 mt-1 rounded-lg
+                bg-[#1a1a1d] text-gray-200 border border-[--color-border]
+                focus:outline-none focus:border-[--color-primary]
+              "
+              onChange={handleChange}
+            />
+          </div>
 
-        <button
-          type="submit"
-          className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
-        >
-          Sign Up
-        </button>
-      </form>
+          {err && <p className="text-red-400 text-sm">{err}</p>}
+
+          <button
+            type="submit"
+            className="
+              w-full py-3 rounded-lg
+              bg-[--color-primary] text-white
+              hover:bg-indigo-500
+              transition
+              font-medium
+            "
+          >
+            Sign Up
+          </button>
+        </form>
+
+        <p className="text-center text-gray-400 mt-6">
+          Already have an account?{" "}
+          <span
+            onClick={() => navigate("/login")}
+            className="text-[--color-secondary] cursor-pointer hover:underline"
+          >
+            Login
+          </span>
+        </p>
+      </motion.div>
     </div>
   );
-};
-
-export default Signup;
+}
