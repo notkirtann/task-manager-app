@@ -13,11 +13,17 @@ import mongoose from "mongoose";
 
 const url = process.env.MONGODB_URL;
 
-console.log("🔌 Connecting to MongoDB:", url);
+  const connectDB = async()=>{
+    try {
+      console.log("<-------------------------------------------------->Loaded MONGODB_URL:", process.env.MONGODB_URL);
+      const connectionInstance = await mongoose.connect(url)
+      console.log("<-------------------------------------------------->MongoDB connected successfully")
+      console.log(`Deatils : ${connectionInstance.connection.host}`);
+      
+    } catch (error) {
+      console.log("MongoDB connection failed:----------------->X X X X X X", error);
+      process.exit(1);
+    }
+  }
 
-mongoose.connect(url)
-  .then(() => console.log("<-------------------------------------------------->MongoDB connected successfully"))
-  .catch((e) => {
-    console.error("MongoDB connection failed:----------------->X X X X X X", e);
-    process.exit(1);
-  });
+export default connectDB;

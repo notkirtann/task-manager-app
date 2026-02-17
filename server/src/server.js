@@ -1,14 +1,15 @@
 import 'dotenv/config';
-console.log("<-------------------------------------------------->Loaded MONGODB_URL:", process.env.MONGODB_URL);
 import express from "express";
-import "./config/mongoose.js";
+import connectDB from './config/mongoose.js';
 import Routes from './routes/index.js'
+import cors from "cors";
+
 //swagger
 import { swaggerUi, swaggerDocument } from './config/swagger.js';
 
 const app = express();
 const PORT = process.env.PORT;
-import cors from "cors";
+
 app.use(cors());
 app.use(express.json());
 
@@ -28,7 +29,12 @@ app.get('/', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+connectDB()
+.then(
+  app.listen(PORT, () => {
   console.log(`<-------------------------------------------------->Server running on port ${PORT}`);
-});
- export default app
+}))
+.catch((error)=>{console.log('Connection Failed');})
+.finally(()=>{console.log('Here we Go!');})
+
+export default app
