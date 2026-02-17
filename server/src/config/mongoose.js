@@ -1,17 +1,17 @@
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import path from 'path';
+import 'dotenv/config';
+// import { fileURLToPath } from 'url';
+// import path from 'path';
 import mongoose from "mongoose";
 
-// Load .env before anything else
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// // Load .env before anything else
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
-dotenv.config({
-  path: path.resolve(__dirname, '../../.env'),
-});
+// dotenv.config({
+//   path: path.resolve(__dirname, '../../.env'),
+// });
 
-const url = process.env.MONGODB_URL || 'mongodb://localhost:27017/task-manager-app';
+const url = process.env.MONGODB_URL;
 
 console.log("🔌 Connecting to MongoDB:", url);
 

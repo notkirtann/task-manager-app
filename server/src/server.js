@@ -1,10 +1,8 @@
-import dotenv from 'dotenv'
-dotenv.config()
+import 'dotenv/config';
 console.log("<-------------------------------------------------->Loaded MONGODB_URL:", process.env.MONGODB_URL);
 import express from "express";
 import "./config/mongoose.js";
-import userRoutes from "./routes/user.routes.js";
-import taskRoutes from "./routes/task.routes.js";
+import Routes from './routes/index.js'
 //swagger
 import { swaggerUi, swaggerDocument } from './config/swagger.js';
 
@@ -20,8 +18,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
   customSiteTitle: "Task Manager API Documentation",
   customfavIcon: "/favicon.ico"
 }));
-app.use('/users', userRoutes);
-app.use('/tasks', taskRoutes);
+app.use('/',Routes);
 
 // Root endpoint
 app.get('/', (req, res) => {
