@@ -3,6 +3,7 @@ import express from "express";
 import connectDB from './config/mongoose.js';
 import Routes from './routes/index.js'
 import cors from "cors";
+import chalk from 'chalk';
 
 //swagger
 import { swaggerUi, swaggerDocument } from './config/swagger.js';
@@ -11,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({limit:"16kb"}));
 
 //swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
@@ -32,9 +33,9 @@ app.get('/', (req, res) => {
 connectDB()
 .then(
   app.listen(PORT, () => {
-  console.log(`<-------------------------------------------------->Server running on port ${PORT}`);
+  console.log(chalk.bgBlue(`Server running on port ${PORT}`));
 }))
-.catch((error)=>{console.log('Connection Failed');})
-.finally(()=>{console.log('Here we Go!');})
+.catch((error)=>{console.log(chalk.bgRed('Connection Failed'));})
+.finally(()=>{console.log(chalk.bgGreen('Here we Go!'));})
 
 export default app

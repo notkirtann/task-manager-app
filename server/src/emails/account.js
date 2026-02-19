@@ -9,7 +9,6 @@ import nodemailer from 'nodemailer'
         auth: {
             user: process.env.USER_EMAIL,
             pass: process.env.USER_PASS
-
         }
     })
 

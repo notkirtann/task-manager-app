@@ -1,4 +1,5 @@
-import 'dotenv/config';
+import "dotenv/config";
+import chalk from 'chalk'
 // import { fileURLToPath } from 'url';
 // import path from 'path';
 import mongoose from "mongoose";
@@ -13,17 +14,15 @@ import mongoose from "mongoose";
 
 const url = process.env.MONGODB_URL;
 
-  const connectDB = async()=>{
-    try {
-      console.log("<-------------------------------------------------->Loaded MONGODB_URL:", process.env.MONGODB_URL);
-      const connectionInstance = await mongoose.connect(url)
-      console.log("<-------------------------------------------------->MongoDB connected successfully")
-      console.log(`Deatils : ${connectionInstance.connection.host}`);
-      
-    } catch (error) {
-      console.log("MongoDB connection failed:----------------->X X X X X X", error);
-      process.exit(1);
-    }
+const connectDB = async () => {
+  try {
+    console.log(chalk.blueBright("Loaded MONGODB_URL:",process.env.MONGODB_URL,));
+    const connectionInstance = await mongoose.connect(url);
+    console.log(chalk.green("MongoDB connected successfully",));
+    console.log(chalk.yellow(`Deatils : ${connectionInstance.connection.host}`));
+  } catch (error) {
+    console.log(chalk.red("MongoDB connection failed:",error,));
+    process.exit(1);
   }
-
+};
 export default connectDB;
